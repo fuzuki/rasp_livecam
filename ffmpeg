@@ -1,0 +1,50 @@
+#! /bin/sh
+### BEGIN INIT INFO
+# Provides: ffmpeg
+# Required-Start: $local_fs $remote_fs
+# Required-Stop: $local_fs $remote_fs
+# Default-Start: 2 3 4 5
+# Default-Stop: S 0 1 6
+# Short-Description: ffmpeg webcam initscript
+# Description: This file should be used to construct scripts to be
+# placed in /etc/init.d.
+
+FFMPEG=/usr/bin/ffmpeg
+NAME=ffmpeg
+
+# 以下の配列を必要なだけ記述してください
+
+OPT="-f video4linux2 -i /dev/video0 -s 800x600 -b:v 1024k http://localhost:8090/feed1.ffm"
+
+do_start()
+{
+  local num=${#OPTS[*]}
+  local i=0
+#  for((i=0; $i<$num; i++ )); do
+    echo -n $FFMPEG
+    echo -n " "
+#    echo ${OPTS[$i]}
+    start-stop-daemon --start -c webcam -g webcam --name $NAME -b --quiet --exec $FFMPEG -- $OPT >/dev/null
+#  done
+}
+
+do_stop()
+{
+  start-stop-daemon --stop --quiet -c webcam -g webcam -s 15 --name $NAME
+}
+
+case "$1" in
+  start)
+    do_start
+    ;;
+  stop)
+    do_stop
+    ;;
+  restart|force-reload)
+    do_stop
+    sleep 1
+    do_start
+    ;;
+  *)
+    ;;
+esac
