@@ -2,7 +2,7 @@
 
 cd `dirname $0`
 
-sudo apt-get install ffmpeg
+#sudo apt-get install ffmpeg
 
 sudo cp ./ffserver /etc/init.d/
 sudo cp ./ffserver.conf /etc/
